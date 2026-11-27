@@ -24,7 +24,7 @@ permissions:
 
 jobs:
   apk:
-    if: ${{ inputs.format == 'apk' || inputs.format == 'both' }}
+    if: ${{ github.event_name == 'push' || inputs.format == 'apk' || inputs.format == 'both' }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
