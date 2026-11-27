@@ -33,6 +33,45 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
+  const deleteModal = document.getElementById("deleteModal");
+  const cancelDelete = document.getElementById("cancelDelete");
+  const confirmDelete = document.getElementById("confirmDelete");
+  let pendingDeleteForm = null;
+
+  document.querySelectorAll(".delete-form").forEach(form => {
+    form.addEventListener("submit", event => {
+      event.preventDefault();
+      pendingDeleteForm = form;
+      deleteModal.classList.add("show");
+      confirmDelete.focus();
+    });
+  });
+
+  const closeDeleteModal = () => {
+    deleteModal.classList.remove("show");
+    pendingDeleteForm = null;
+  };
+
+  if (cancelDelete) cancelDelete.addEventListener("click", closeDeleteModal);
+  if (deleteModal) {
+    deleteModal.addEventListener("click", event => {
+      if (event.target === deleteModal) closeDeleteModal();
+    });
+  }
+  if (confirmDelete) {
+    confirmDelete.addEventListener("click", () => {
+      if (!pendingDeleteForm) return;
+      pendingDeleteForm.submit();
+      pendingDeleteForm = null;
+      deleteModal.classList.remove("show");
+    });
+  }
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape" && deleteModal?.classList.contains("show")) {
+      closeDeleteModal();
+    }
+  });
+
   const drivePhotoInput = document.getElementById("drivePhotoUrl");
   const profileAvatar = document.getElementById("profileAvatar");
   const profileNameInput = document.getElementById("profileName");

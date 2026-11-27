@@ -280,3 +280,10 @@
 .add-form select{width:100%;padding:10px 11px;border:1px solid #48564a;border-radius:8px;background:#121915;color:#f1f4ef;font:inherit;font-size:13px;color-scheme:dark;outline:none}
 .add-form select:focus{border-color:#a7cb99;box-shadow:0 0 0 3px #a7cb992b}
 @media(max-width:650px){.task-categories{gap:6px;margin-bottom:8px}.category-tab{padding:7px 9px;font-size:11px}.task-category-label{font-size:9px!important}}
+.delete-modal p{margin:0 0 20px;font-size:14px}
+.modal-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:20px}
+.modal-actions button{min-height:40px;padding:9px 15px;border-radius:8px;font-weight:700;cursor:pointer}
+.secondary-btn{border:1px solid #48564a;background:#121915;color:#e7ece5}
+.secondary-btn:hover{background:#263329}
+.danger-btn{border:1px solid #a94f4b;background:#a94f4b;color:#fff}
+.danger-btn:hover{background:#c35b55}

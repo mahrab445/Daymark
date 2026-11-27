@@ -82,7 +82,7 @@
             </div>
             {% if can_edit_tasks %}<div class="task-actions">
               <button class="icon-btn edit-btn" type="button" data-id="{{ task._id }}" data-title="{{ task.title|e }}" data-time="{{ task.get('task_time', '') }}" title="Edit"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5 5 5M4 20l4.5-1 11-11a2.1 2.1 0 0 0-3-3l-11 11L4 20Z"/></svg></button>
-              <form method="POST" action="{{ url_for('delete_task', task_id=task._id) }}" onsubmit="return confirm('Delete this task?')">
+              <form method="POST" class="delete-form" action="{{ url_for('delete_task', task_id=task._id) }}">
                 <input type="hidden" name="task_date" value="{{ selected_date }}">
                 <input type="hidden" name="category" value="{{ selected_category }}">
                 <button class="icon-btn delete-btn" type="submit" title="Delete"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6m4-6v6M5 7l1 14h12l1-14M9 7V4h6v3"/></svg></button>
@@ -138,6 +138,18 @@
       <input type="time" name="task_time" id="editTime">
       <button class="primary-btn full-btn" type="submit">Save changes</button>
     </form>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="deleteModal" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle" aria-describedby="deleteModalText">
+  <div class="edit-modal delete-modal">
+    <span class="eyebrow">REMOVE TASK</span>
+    <h3 id="deleteModalTitle">Delete this task?</h3>
+    <p id="deleteModalText" class="muted">This task will be removed from your Daymark list.</p>
+    <div class="modal-actions">
+      <button type="button" class="secondary-btn" id="cancelDelete">Cancel</button>
+      <button type="button" class="danger-btn" id="confirmDelete">Delete task</button>
+    </div>
   </div>
 </div>
 {% endblock %}
