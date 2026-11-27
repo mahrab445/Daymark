@@ -81,11 +81,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const dhakaClock = document.getElementById("dhakaClock");
   if (dhakaClock) {
     const updateDhakaClock = () => {
-      dhakaClock.textContent = new Intl.DateTimeFormat("en-GB", {
+      dhakaClock.textContent = new Intl.DateTimeFormat("en-US", {
         timeZone: "Asia/Dhaka",
         hour: "2-digit",
         minute: "2-digit",
-        second: "2-digit",
         hour12: true,
       }).format(new Date());
     };

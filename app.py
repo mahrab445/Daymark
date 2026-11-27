@@ -148,6 +148,14 @@ def dashboard():
     for task in day_tasks:
         # Older tasks predate categories; keep them visible in the default group.
         task.setdefault("category", "Daily Routine")
+        task_time = task.get("task_time", "")
+        if task_time:
+            try:
+                task["display_task_time"] = datetime.strptime(task_time, "%H:%M").strftime("%I:%M %p").lstrip("0")
+            except ValueError:
+                task["display_task_time"] = task_time
+        # Stable sort keeps equal-time tasks in their original creation order.
+    day_tasks.sort(key=lambda task: (not bool(task.get("task_time")), task.get("task_time", "")))
     category_counts = {
         "All": len(day_tasks),
         "Daily Routine": sum(task["category"] == "Daily Routine" for task in day_tasks),
@@ -170,6 +178,7 @@ def dashboard():
         "dashboard.html",
         tasks=visible_tasks,
         selected_date=selected_date,
+        selected_weekday=selected_day.strftime("%A"),
         selected_category=selected_category,
         category_counts=category_counts,
         total=total,
