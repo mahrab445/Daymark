@@ -1,6 +1,6 @@
 import os
 import re
-from datetime import datetime
+from datetime import datetime, timedelta
 from functools import wraps
 from urllib.parse import parse_qs, urlparse
 from zoneinfo import ZoneInfo
@@ -15,6 +15,13 @@ load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "change-this-secret-key")
+app.config.update(
+    PERMANENT_SESSION_LIFETIME=timedelta(days=3650),
+    SESSION_REFRESH_EACH_REQUEST=True,
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax",
+    SESSION_COOKIE_SECURE=os.getenv("RENDER") == "true",
+)
 
 mongo_uri = os.getenv("MONGO_URI")
 if not mongo_uri:
@@ -95,6 +102,7 @@ def register():
         })
         session["user_id"] = str(result.inserted_id)
         session["username"] = username
+        session.permanent = True
         return redirect(url_for("dashboard"))
 
     return render_template("register.html")
@@ -110,6 +118,7 @@ def login():
         if user and check_password_hash(user["password"], password):
             session["user_id"] = str(user["_id"])
             session["username"] = user["username"]
+            session.permanent = True
             return redirect(url_for("dashboard"))
 
         flash("Incorrect email or password.", "error")
