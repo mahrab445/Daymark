@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Create account · Daymark{% endblock %}
+{% block content %}
+<main class="auth-shell">
+  <section class="auth-panel">
+    <a class="brand brand-logo-link" href="{{ url_for('login') }}"><img class="brand-logo" src="{{ url_for('static', filename='Daymark.png') }}" alt=""><span class="brand-name">Daymark</span></a>
+    <div class="auth-copy">
+      <p class="eyebrow">A FRESH START</p>
+      <h1>Build a day<br><span>that feels right.</span></h1>
+      <p class="muted">Create your space and start tracking your daily routine.</p>
+    </div>
+    <form class="auth-form" method="POST">
+      <label>Your name</label>
+      <input type="text" name="username" placeholder="Your name" required>
+      <label>Email address</label>
+      <input type="email" name="email" placeholder="you@example.com" required>
+      <label>Password <small>(at least 6 characters)</small></label>
+      <input type="password" name="password" minlength="6" placeholder="Create a password" required>
+      <button class="primary-btn full-btn" type="submit">Create account <span>→</span></button>
+    </form>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}<p class="flash {{ category }}">{{ message }}</p>{% endfor %}
+    {% endwith %}
+    <p class="auth-bottom">Already have an account? <a href="{{ url_for('login') }}">Log in</a></p>
+  </section>
+  <aside class="auth-aside">
+    <div class="aside-top">A LITTLE PROGRESS, EVERY DAY.</div>
+    <div class="quote-card">
+      <div class="quote-symbol">“</div>
+      <h2>Start where<br>you are.</h2>
+      <p>You don't need a perfect plan. Just a clear list and the next small thing to do.</p>
+      <div class="mini-line"><span></span><span></span><span></span><span></span><span></span><i></i></div>
+      <small>YOUR ROUTINE, YOUR PACE</small>
+    </div>
+    <div class="aside-bottom">DAYMARK <span>•</span> DAILY ROUTINE TRACKER</div>
+  </aside>
+</main>
+{% endblock %}

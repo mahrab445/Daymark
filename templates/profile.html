@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Edit profile · Daymark{% endblock %}
+{% block content %}
+<main class="profile-page">
+  <header class="profile-page-header">
+    <a class="brand brand-logo-link" href="{{ url_for('dashboard') }}"><img class="brand-logo" src="{{ url_for('static', filename='Daymark.png') }}" alt=""><span class="brand-name">Daymark</span></a>
+    <a class="profile-back" href="{{ url_for('dashboard') }}">Back to dashboard</a>
+  </header>
+
+  <section class="profile-card">
+    <span class="eyebrow">YOUR ACCOUNT</span>
+    <h1>Edit profile</h1>
+    <p class="profile-intro">Update your name and profile photo.</p>
+
+    <div class="profile-preview">
+      <div class="avatar avatar-large" id="profileAvatar"><span id="profileAvatarInitial">{{ current_user.username[:1]|upper }}</span>{% if photo_url %}<img src="{{ photo_url }}" alt="" referrerpolicy="no-referrer">{% endif %}</div>
+      <div><strong id="profilePreviewName">{{ current_user.username }}</strong><small>{{ current_user.email }}</small></div>
+    </div>
+
+    <form class="profile-form" method="POST">
+      <label for="profileName">Display name</label>
+      <input id="profileName" type="text" name="username" value="{{ current_user.username }}" maxlength="40" required>
+
+      <label for="drivePhotoUrl">Google Drive photo link</label>
+      <input id="drivePhotoUrl" type="url" name="drive_photo_url" value="{{ drive_photo_url_input }}" placeholder="Paste a Google Drive sharing link">
+      <p class="profile-help">In Google Drive, set General access to “Anyone with the link” and copy the file link. Leave blank to remove the photo. It will be cropped to fit your profile circle and sync across the dashboard.</p>
+
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% for category, message in messages %}<p class="flash {{ category }}">{{ message }}</p>{% endfor %}
+      {% endwith %}
+
+      <button class="primary-btn full-btn" type="submit">Save profile</button>
+    </form>
+  </section>
+</main>
+{% endblock %}

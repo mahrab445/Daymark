@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Login · Daymark{% endblock %}
+{% block content %}
+<main class="auth-shell">
+  <section class="auth-panel">
+    <a class="brand brand-logo-link" href="{{ url_for('login') }}"><img class="brand-logo" src="{{ url_for('static', filename='Daymark.png') }}" alt=""><span class="brand-name">Daymark</span></a>
+    <div class="auth-copy">
+      <p class="eyebrow">YOUR DAY, IN ORDER</p>
+      <h1>Make today<br><span>count.</span></h1>
+      <p class="muted">A quieter way to stay on top of the things that matter.</p>
+    </div>
+    <form class="auth-form" method="POST">
+      <label>Email address</label>
+      <input type="email" name="email" placeholder="you@example.com" required>
+      <label>Password</label>
+      <input type="password" name="password" placeholder="Enter your password" required>
+      <button class="primary-btn full-btn" type="submit">Log in <span>→</span></button>
+    </form>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}<p class="flash {{ category }}">{{ message }}</p>{% endfor %}
+    {% endwith %}
+    <p class="auth-bottom">New to Daymark? <a href="{{ url_for('register') }}">Create an account</a></p>
+  </section>
+  <aside class="auth-aside">
+    <div class="aside-top">A LITTLE PROGRESS, EVERY DAY.</div>
+    <div class="quote-card">
+      <div class="quote-symbol">“</div>
+      <h2>Small steps.<br>Steady days.</h2>
+      <p>Keep your plans simple. Show up, tick things off, and build a rhythm that works for you.</p>
+      <div class="mini-line"><span></span><span></span><span></span><span></span><span></span><i></i></div>
+      <small>YOUR ROUTINE, YOUR PACE</small>
+    </div>
+    <div class="aside-bottom">DAYMARK <span>•</span> DAILY ROUTINE TRACKER</div>
+  </aside>
+</main>
+{% endblock %}
