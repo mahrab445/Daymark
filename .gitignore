@@ -7,4 +7,5 @@ release/*.apk
 release/*.exe
 release/.build/
 release/android/.gradle/
+release/android/build/
 release/android/app/build/

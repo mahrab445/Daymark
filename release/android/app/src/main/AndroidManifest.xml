@@ -3,7 +3,7 @@
 
     <application
         android:allowBackup="false"
-        android:icon="@drawable/ic_daymark"
+        android:icon="@drawable/daymark"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="false">

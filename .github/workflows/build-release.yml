@@ -1,6 +1,12 @@
 name: Build Daymark release
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - 'Daymark.png'
+      - 'release/android/**'
+      - '.github/workflows/build-release.yml'
   workflow_dispatch:
     inputs:
       format:
