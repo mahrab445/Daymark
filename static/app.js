@@ -2,7 +2,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const datePicker = document.getElementById("datePicker");
   if (datePicker) {
     datePicker.addEventListener("change", () => {
-      if (datePicker.value) window.location.href = `/dashboard?date=${datePicker.value}`;
+      if (datePicker.value) {
+        const nextUrl = new URL(window.location.href);
+        nextUrl.searchParams.set("date", datePicker.value);
+        window.location.href = nextUrl.toString();
+      }
     });
   }
 

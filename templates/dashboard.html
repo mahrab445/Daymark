@@ -54,13 +54,21 @@
 
     <section class="task-layout">
       <div class="task-section">
-        <div class="section-heading"><div><span class="eyebrow">YOUR CHECKLIST</span><h3>Tasks for the day</h3></div><span class="task-count">{{ total }} tasks</span></div>
+        <div class="section-heading"><div><span class="eyebrow">YOUR CHECKLIST</span><h3>Tasks for the day</h3></div><span class="task-count">{{ tasks|length }} tasks</span></div>
+        <nav class="task-categories" aria-label="Filter tasks by category">
+          {% for category_name in ["All", "Daily Routine", "Academic"] %}
+          <a href="{{ url_for('dashboard', date=selected_date, category=category_name) }}" class="category-tab {% if selected_category == category_name %}active{% endif %}" {% if selected_category == category_name %}aria-current="page"{% endif %}>
+            {{ category_name }} <span>{{ category_counts[category_name] }}</span>
+          </a>
+          {% endfor %}
+        </nav>
         <div class="task-list">
           {% for task in tasks %}
           <article class="task-row {% if task.completed %}is-complete{% endif %}">
             {% if can_toggle_tasks %}
             <form method="POST" action="{{ url_for('toggle_task', task_id=task._id) }}">
               <input type="hidden" name="task_date" value="{{ selected_date }}">
+              <input type="hidden" name="category" value="{{ selected_category }}">
               <button class="check-btn {% if task.completed %}checked{% endif %}" type="submit" aria-label="Toggle task">{% if task.completed %}<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>{% endif %}</button>
             </form>
             {% else %}
@@ -68,6 +76,7 @@
             {% endif %}
             <div class="task-info">
               <strong>{{ task.title }}</strong>
+              <small class="task-category-label">{{ task.category }}</small>
               {% if task.get('task_time') %}<small class="task-time"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>{{ task.task_time }} Dhaka</small>{% endif %}
               {% if task.description %}<small>{{ task.description }}</small>{% endif %}
             </div>
@@ -75,6 +84,7 @@
               <button class="icon-btn edit-btn" type="button" data-id="{{ task._id }}" data-title="{{ task.title|e }}" data-time="{{ task.get('task_time', '') }}" title="Edit"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 5 5 5M4 20l4.5-1 11-11a2.1 2.1 0 0 0-3-3l-11 11L4 20Z"/></svg></button>
               <form method="POST" action="{{ url_for('delete_task', task_id=task._id) }}" onsubmit="return confirm('Delete this task?')">
                 <input type="hidden" name="task_date" value="{{ selected_date }}">
+                <input type="hidden" name="category" value="{{ selected_category }}">
                 <button class="icon-btn delete-btn" type="submit" title="Delete"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M10 11v6m4-6v6M5 7l1 14h12l1-14M9 7V4h6v3"/></svg></button>
               </form>
             </div>{% endif %}
@@ -92,6 +102,11 @@
         <form method="POST" action="{{ url_for('add_task') }}" class="add-form">
           <label>Task name</label>
           <input type="text" name="title" placeholder="e.g. Study Data Structures" maxlength="120" required>
+          <label for="taskCategory">Category</label>
+          <select name="category" id="taskCategory" required>
+            <option value="Daily Routine" {% if selected_category != 'Academic' %}selected{% endif %}>Daily Routine</option>
+            <option value="Academic" {% if selected_category == 'Academic' %}selected{% endif %}>Academic</option>
+          </select>
           <label>Short note <span class="optional">OPTIONAL</span></label>
           <textarea name="description" rows="3" placeholder="Add a little detail..."></textarea>
           <label>Date</label>
@@ -116,6 +131,7 @@
     <span class="eyebrow">UPDATE TASK</span><h3>Edit task</h3>
     <form method="POST" id="editForm">
       <input type="hidden" name="task_date" value="{{ selected_date }}">
+      <input type="hidden" name="category" value="{{ selected_category }}">
       <label>Task name</label>
       <input type="text" name="title" id="editTitle" maxlength="120" required>
       <label>Time (Asia/Dhaka) <span class="optional">OPTIONAL</span></label>

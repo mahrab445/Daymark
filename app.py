@@ -145,6 +145,22 @@ def dashboard():
         "task_date": selected_date
     }).sort("created_at", 1))
 
+    for task in day_tasks:
+        # Older tasks predate categories; keep them visible in the default group.
+        task.setdefault("category", "Daily Routine")
+    category_counts = {
+        "All": len(day_tasks),
+        "Daily Routine": sum(task["category"] == "Daily Routine" for task in day_tasks),
+        "Academic": sum(task["category"] == "Academic" for task in day_tasks),
+    }
+    selected_category = request.args.get("category", "All")
+    if selected_category not in category_counts:
+        selected_category = "All"
+    visible_tasks = (
+        day_tasks if selected_category == "All"
+        else [task for task in day_tasks if task["category"] == selected_category]
+    )
+
     total = len(day_tasks)
     completed = sum(1 for task in day_tasks if task.get("completed"))
     pending = total - completed
@@ -152,8 +168,10 @@ def dashboard():
 
     return render_template(
         "dashboard.html",
-        tasks=day_tasks,
+        tasks=visible_tasks,
         selected_date=selected_date,
+        selected_category=selected_category,
+        category_counts=category_counts,
         total=total,
         completed=completed,
         pending=pending,
@@ -217,6 +235,9 @@ def add_task():
     task_date = request.form.get("task_date", dhaka_today().isoformat())
     description = request.form.get("description", "").strip()
     task_time = request.form.get("task_time", "").strip()
+    task_category = request.form.get("category", "Daily Routine").strip()
+    if task_category not in ("Daily Routine", "Academic"):
+        task_category = "Daily Routine"
 
     try:
         datetime.strptime(task_date, "%Y-%m-%d")
@@ -225,7 +246,7 @@ def add_task():
 
     if task_date < dhaka_today().isoformat():
         flash("Past dates are view-only. You can't add a task there.", "error")
-        return redirect(url_for("dashboard", date=task_date))
+        return redirect(url_for("dashboard", date=task_date, category=task_category))
 
     try:
         if task_time:
@@ -240,10 +261,11 @@ def add_task():
             "description": description,
             "task_date": task_date,
             "task_time": task_time,
+            "category": task_category,
             "completed": False,
             "created_at": dhaka_now()
         })
-    return redirect(url_for("dashboard", date=task_date))
+    return redirect(url_for("dashboard", date=task_date, category=task_category))
 
 
 @app.route("/tasks/toggle/<task_id>", methods=["POST"])
@@ -254,7 +276,11 @@ def toggle_task(task_id):
         tasks.update_one({"_id": task["_id"]}, {"$set": {"completed": not task.get("completed", False)}})
     elif task:
         flash("Only today's tasks can be marked complete.", "error")
-    return redirect(url_for("dashboard", date=request.form.get("task_date", dhaka_today().isoformat())))
+    return redirect(url_for(
+        "dashboard",
+        date=request.form.get("task_date", dhaka_today().isoformat()),
+        category=request.form.get("category", "All")
+    ))
 
 
 @app.route("/tasks/delete/<task_id>", methods=["POST"])
@@ -265,7 +291,11 @@ def delete_task(task_id):
         tasks.delete_one({"_id": task["_id"]})
     elif task:
         flash("Past tasks are view-only and can't be changed.", "error")
-    return redirect(url_for("dashboard", date=request.form.get("task_date", dhaka_today().isoformat())))
+    return redirect(url_for(
+        "dashboard",
+        date=request.form.get("task_date", dhaka_today().isoformat()),
+        category=request.form.get("category", "All")
+    ))
 
 
 @app.route("/tasks/edit/<task_id>", methods=["POST"])
@@ -287,7 +317,11 @@ def edit_task(task_id):
         )
     elif task:
         flash("Past tasks are view-only and can't be changed.", "error")
-    return redirect(url_for("dashboard", date=task_date))
+    return redirect(url_for(
+        "dashboard",
+        date=task_date,
+        category=request.form.get("category", "All")
+    ))
 
 
 if __name__ == "__main__":
