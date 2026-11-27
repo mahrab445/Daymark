@@ -1,4 +1,5 @@
 Flask==3.1.2
+gunicorn==23.0.0
 pymongo[srv]==4.20.1
 python-dotenv==1.0.1
 tzdata==2026.6

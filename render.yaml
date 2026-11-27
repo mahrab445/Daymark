@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: daymark
+    runtime: python
+    region: singapore
+    plan: free
+    branch: main
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn app:app --bind 0.0.0.0:$PORT
+    healthCheckPath: /login
+    autoDeployTrigger: commit
+    envVars:
+      - key: MONGO_URI
+        sync: false
+      - key: DB_NAME
+        value: daily_routine_tracker
+      - key: SECRET_KEY
+        generateValue: true
