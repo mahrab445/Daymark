@@ -64,5 +64,9 @@ This repository includes a `render.yaml` Blueprint for a Python web service. To 
 
 The Render Blueprint uses the Singapore region and the free web-service plan. Free services can sleep when idle and may take a little time to wake up. See [Render's Flask deployment guide](https://render.com/docs/deploy-flask) and [outbound IP guide](https://render.com/docs/outbound-ip-addresses).
 
+## APK and Windows app
+
+Build scripts and the Android WebView wrapper are in [`release/README.md`](release/README.md). They package the hosted Daymark app at `https://wickeddaymark.onrender.com/`.
+
 ## Notes
 This is a starter project for local development. The Render Blueprint generates a secret key and runs Flask with debug mode off. Keep MongoDB Network Access limited to the Render service's outbound IP ranges.

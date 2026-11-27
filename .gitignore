@@ -3,3 +3,8 @@ __pycache__/
 *.pyc
 .venv/
 venv/
+release/*.apk
+release/*.exe
+release/.build/
+release/android/.gradle/
+release/android/app/build/
